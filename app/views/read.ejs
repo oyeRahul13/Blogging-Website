@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Post Details</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+      body {
+        background-color: #222;
+        color: #ddd;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 90%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar {
+        background-color: #222 !important;
+      }
+
+      .blog-post {
+        background-color: #333;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+      }
+
+      .blog-title {
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .blog-image {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      .blog-text {
+        line-height: 1.6;
+        max-width: 100%;
+      }
+
+      .author-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #ddd;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .icon {
+        margin-right: 5px;
+        color: #ccc;
+      }
+
+      /* Comments section */
+      .comments-section {
+        background-color: #444;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        overflow-y: auto;
+        max-height: 600px;
+      }
+
+      .comment {
+        background-color: #555;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+      }
+
+      .comment-text {
+        flex: 1;
+        margin: 0;
+        color: #ddd;
+      }
+
+      .no-comments {
+        text-align: center;
+        font-style: italic;
+        color: #ccc;
+      }
+
+      .add-comment-form {
+        background-color: #333;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+      }
+
+      .add-comment-form textarea {
+        width: calc(100% - 20px);
+        height: 81px;
+        resize: none;
+        background-color: #444;
+        color: #ddd;
+        padding: 10px;
+        border: 1px solid #666;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      .add-comment-form button {
+        background-color: #666;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #333;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #888;
+      }
+      .g-recaptcha {
+        background-color: #333;
+        border-radius: 5px;
+        width: 300px;
+        height: 78px;
+      }
+
+      .g-recaptcha > div {
+        margin: 0 auto;
+      }
+      .tags-container {
+    margin-top: 10px;
+}
+
+.tags-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.tags-box {
+    display: inline-block;
+    padding: 5px;
+    background-color: #444;
+    border-radius: 5px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <button class="btn btn-secondary mt-3" onclick="backButton()">
+        Back
+      </button>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="blog-post" id="blogPostContainer">
+            <!-- Blog post content will be dynamically inserted here -->
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="comments-section" id="commentsSection">
+            <!-- Comments will be dynamically inserted here -->
+          </div>
+          <div class="add-comment-form">
+            <!-- Add comment form -->
+            <% if (user) { %>
+            <form id="commentForm">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  rows="3"
+                  placeholder="Leave a comment..."
+                ></textarea>
+              </div>
+              <div
+                class="g-recaptcha"
+                data-sitekey="6Ld40YopAAAAALaRZnBk1XrxyU577GnfnVsJp5wz"
+                data-callback="showCommentContainer"
+              ></div>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="commentButton"
+                style="display: none"
+              >
+                Add Comment
+              </button>
+            </form>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+                function showCommentContainer() {
+            document.querySelector('.add-comment-form button[type="submit"]').style.display = "block";
+
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    const urlParams = new URLSearchParams(window.location.pathname);
+                    const postId = window.location.pathname.split("/").pop();
+
+                    // Function to fetch and display comments
+                    function fetchComments() {
+                        fetch(`http://localhost:8000/comment/read/${postId}`)
+                            .then((response) => response.json())
+                            .then((res) => {
+                                if (res.success) {
+                                    const comments = res.data;
+                                    if (comments.length === 0) {
+                                        document.getElementById("commentsSection").innerHTML = "<p class='no-comments'>No Comments</p>";
+                                    } else {
+                                        document.getElementById("commentsSection").innerHTML = "<h4>Comments</h4>";
+                                        const commentsHtml = comments.map(comment => `
+                                            <div class="comment">
+                                                <p class="author-name"><i class="fas fa-user icon"></i> ${comment.user.name}</p>
+                                                <p class="comment-text">${comment.comment}</p>
+                                            </div>
+                                        `).join('');
+                                        document.getElementById("commentsSection").innerHTML += commentsHtml;
+                                    }
+                                } else {
+                                    console.error("Error fetching comments");
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching comments:", error);
+                            });
+                    }
+
+                    // Fetch blog post details from the API endpoint
+                    fetch(`http://localhost:8000/read/${postId}`)
+                        .then((response) => response.json())
+                        .then((res) => {
+                            if (res && res.data) {
+                                const post = res.data;
+                                //console.log(post);
+                                var imagePath = post.image.split("\\")[1];
+                               document.getElementById("blogPostContainer").innerHTML = `
+          <h2 class="blog-title">${post.title}</h2>
+          <img src="http://localhost:8000/${imagePath}" alt="Blog Image" class="blog-image">
+          <p class="author-name"><i class="fas fa-user icon"></i> ${post.user.name}</p>
+          <div class="tags-container">
+    <span class="tags-label">Tags:</span>
+    <div class="tags-box">
+        ${post.tags.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')}
+    </div>
+</div>
+          <br>
+          <p class="blog-text">${post.postText}</p>
+      `;
+
+                            } else {
+                                console.error("Invalid API response format");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching blog post details:", error);
+                        });
+
+                    // Fetch and display comments when the page loads
+                    fetchComments();
+
+                    document.getElementById("commentForm").addEventListener("submit", function (event) {
+                        event.preventDefault();
+                        const commentText = document.getElementById("comment").value.trim();
+                        if (commentText !== "") {
+                            fetch("http://localhost:8000/comment/create/" + postId, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    comment: commentText
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Clear the comment field after successful submission
+                                    document.getElementById("comment").value = "";
+                                    // Fetch and display comments again to include the newly added comment
+                                    fetchComments();
+                                } else {
+                                    console.error("Error submitting comment");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error submitting comment:", error);
+                            });
+                        }
+                    });
+                });
+
+                function backButton() {
+                    <% if (user) { %>
+                        window.location.href = '/admin';
+                    <% } else { %>
+                        window.location.href = '/';
+                    <% } %>
+                }
+    </script>
+  </body>
+</html>

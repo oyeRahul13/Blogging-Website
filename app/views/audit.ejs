@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audit Logs</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        color: #fff;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #333;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #888;
+      }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+      h2 {
+        color: #fff;
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #555;
+      }
+      th {
+        background-color: #222;
+        font-weight: bold;
+      }
+      tr {
+        background-color: #444;
+      }
+      tr:nth-child(even) {
+        background-color: #333;
+      }
+      tr:hover {
+        background-color: #555;
+      }
+      .btn-back {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #343a40;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .btn-back:hover {
+        background-color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      type="button"
+      class="btn-back"
+      onclick="window.location.href='/admin'"
+    >
+      Back
+    </button>
+    <div class="container">
+      <h2>Audit Logs:</h2>
+      <table id="auditLogsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Action</th>
+            <th>Post ID</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Audit logs will be dynamically populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      fetch("/auditLogs")
+        .then((response) => response.json())
+        .then((auditLogs) => {
+          const auditLogsTable = document.getElementById("auditLogsTable");
+          auditLogs.forEach((log) => {
+            const row = auditLogsTable.insertRow();
+            console.log(log);
+            row.innerHTML = `
+                        <td>${log.id}</td>
+                        <td>${log.userId}</td>
+                        <td>${
+                          log.user
+                            ? log.user?.name
+                            : '<p style="color: red;">User Deleted</p>'
+                        }</td>
+                        <td>${log.action}</td>
+                        <td>${log.postId}</td>
+                        <td>${new Date(
+                          log.createdAt
+                        ).toLocaleString()}</td>
+                    `;
+          });
+        })
+        .catch((error) => console.error("Error fetching audit logs:", error));
+    </script>
+  </body>
+</html>

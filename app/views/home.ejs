@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Blog</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #333;
+        color: #ffffff;
+      }
+
+      .navbar {
+        background-color: #222 !important;
+      }
+
+      .blog-card {
+        background-color: #444;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 20px;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+        display: block;
+        height: 100%;
+      }
+
+      .blog-card:hover {
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
+      }
+
+      .blog-title {
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .blog-text {
+        color: #ccc;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+      }
+
+      .blog-content {
+        background-color: #555;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .blog-content-title {
+        color: #fff;
+        margin-bottom: 10px;
+      }
+
+      .blog-content-text {
+        color: #ddd;
+      }
+
+      .author-name {
+        color: #00b33c;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .author-name .icon {
+        margin-right: 5px;
+      }
+
+      .author-name .icon,
+      .author-name span {
+        vertical-align: middle;
+      }
+      .pagination {
+        justify-content: center;
+        margin-top: 20px;
+      }
+      li {
+        list-style-type: none;
+      }
+      .dropdown-menu-right {
+        right: 0;
+        left: auto;
+      }
+      .navbar-nav .nav-item {
+        margin-right: 10px;
+      }
+
+      .dropdown.ml-2 .btn {
+        margin-right: 10px;
+      }
+      .select2-container--default .select2-selection--single {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        height: 39px;
+        width: 160px;
+      }
+
+      .select2-container--default
+        .select2-selection--single
+        .select2-selection__arrow {
+        display: none;
+      }
+      .ribbon-container {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+      }
+
+      .ribbon {
+        position: absolute;
+        top: 20px;
+        left: -48%;
+        transform: rotate(-43deg);
+        background-color: #2c6904;
+        color: #fff;
+        padding: 5px 50%;
+        font-size: 12px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+      }
+      .select2-container--default .select2-selection--single {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        height: 39px;
+        width: 160px;
+        background-color: #333;
+        color: #ffffff;
+      }
+
+      .select2-container--default
+        .select2-selection--single
+        .select2-selection__rendered {
+        color: #ffffff;
+      }
+
+      .select2-container--default
+        .select2-selection--single
+        .select2-selection__arrow {
+        display: none;
+      }
+
+      .select2-container--default .select2-selection--single:hover {
+        background-color: #4a4a4a;
+      }
+
+      .select2-results__option {
+        color: #000000;
+        background-color: #ffffff;
+      }
+      .tag {
+        display: inline-block;
+        background-color: #333;
+        color: #fff;
+        padding: 5px 10px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        text-decoration: none;
+      }
+
+      .tag:hover {
+        background-color: #555;
+        color: white;
+        text-decoration: none;
+      }
+      .remaining-tags-circle {
+        background-color: #333;
+        color: #fff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: inline-flex; /* Change to inline-flex to align with other tags */
+        justify-content: center;
+        align-items: center;
+        margin-left: 5px; /* Add margin for spacing */
+        font-size: 14px; /* Adjust font size as needed */
+      }
+      .hidden {
+        display: none;
+      }
+      .show-more-tags {
+        cursor: pointer;
+        color: #aaa;
+        margin-left: 5px;
+      }
+      .show-more-tags i {
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #333;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">Anime Hub</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8000"
+              ><i class="fas fa-home"></i
+            ></a>
+          </li>
+          <li class="nav-item">
+            <button
+              class="btn btn-outline-primary my-2 my-sm-0 btn-login"
+              onclick="window.location.href='http://localhost:8000/login'"
+            >
+              Login
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="btn btn-outline-primary my-2 my-sm-0 btn-signup"
+              onclick="window.location.href='http://localhost:8000/signup'"
+            >
+              Signup
+            </button>
+          </li>
+          <li class="nav-item">
+            <select class="form-control ml-2" id="categoryDropdown">
+              <option value="">Select a category</option>
+            </select>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+      <div class="row" id="blogPostsContainer">
+        <!-- Blog posts will be dynamically added here -->
+      </div>
+      <div
+        id="pagination"
+        class="mt-3 w-100 d-flex justify-content-center align-items-center"
+      >
+        <button id="prevPageBtn" class="btn btn-outline-secondary mr-2">
+          Previous
+        </button>
+        <span id="currentPage" class="mx-2">Page 1</span>
+        <button id="nextPageBtn" class="btn btn-outline-secondary ml-2">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- Blog Details Modal -->
+    <div
+      class="modal fade"
+      id="blogContentModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="blogContentModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content blog-content">
+          <div class="modal-header">
+            <h5
+              class="modal-title blog-content-title"
+              id="blogContentModalLabel"
+            >
+              Blog Title
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="blog-content-text">Blog Content</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const cardsPerPage = 6;
+        let currentPage = 1;
+        let nextPage = true;
+
+        const fetchBlogPosts = async () => {
+          try {
+            let response;
+            const urlParams = new URLSearchParams(window.location.search);
+            const tag = urlParams.get("tags");
+            if (tag) {
+              response = await fetch(
+                `http://localhost:8000/search?tags=${tag}`
+              );
+            } else {
+              response = await fetch(
+                `http://localhost:8000/read?limit=${cardsPerPage}&offset=${
+                  (currentPage - 1) * cardsPerPage
+                }`
+              );
+            }
+            console.log("hiiiiiiiii", response);
+            const data = await response.json();
+
+            if (data && Array.isArray(data.data)) {
+              displayPosts(data.data);
+              nextPage = data.data.length === cardsPerPage;
+              renderPagination();
+            } else {
+              console.error("Invalid API response format");
+            }
+          } catch (error) {
+            console.error("Error fetching blog posts:", error);
+          }
+        };
+
+        const fetchCategories = async () => {
+          try {
+            const response = await fetch("http://localhost:8000/allcategory");
+            const categoriesData = await response.json();
+
+            if (categoriesData && Array.isArray(categoriesData)) {
+              populateCategoryDropdown(categoriesData);
+            } else {
+              console.error("Invalid categories API response format");
+            }
+          } catch (error) {
+            console.error("Error fetching categories:", error);
+          }
+        };
+
+        const populateCategoryDropdown = (categories) => {
+          const categoryDropdown = $("#categoryDropdown");
+          categoryDropdown.empty(); // Clear existing options
+
+          const allOption = $('<option value="">All</option>');
+          categoryDropdown.append(allOption);
+
+          categories.forEach((category) => {
+            categoryDropdown.append(
+              `<option value="${category.id}">${category.name}</option>`
+            );
+          });
+          categoryDropdown.select2({
+            placeholder: "Select a category",
+            allowClear: true,
+          });
+          categoryDropdown.on("change", function () {
+            const categoryId = $(this).val();
+            fetchPostsByCategory(categoryId);
+          });
+        };
+        const fetchPostsByCategory = async (categoryId) => {
+          try {
+            const response = await fetch(
+              `http://localhost:8000/read?cat=${encodeURIComponent(
+                categoryId
+              )}&limit=${9999}&offset=${0}`
+            );
+            const data = await response.json();
+            if (data && Array.isArray(data.data)) {
+              displayPosts(data.data);
+              currentPage = 1;
+              nextPage = false;
+              renderPagination();
+            } else {
+              console.error("Invalid API response format");
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching posts for category ${categoryId}:`,
+              error
+            );
+          }
+        };
+
+        const displayPosts = (posts) => {
+          const blogPostsContainer =
+            document.getElementById("blogPostsContainer");
+          blogPostsContainer.innerHTML = "";
+          posts.forEach((post) => {
+            console.log(post);
+            var imagePath = post.image.split("\\").pop();
+            var tags = post.tags.split(",").map((tag) => tag.trim()); // Extract tags from the data
+
+            var firstFiveTags = tags.slice(0, 5); // Get the first five tags
+            var remainingTags = tags.slice(5); // Get the remaining tags
+            var remainingTagsCount = remainingTags.length; // Count of remaining tags
+
+            var tagsHTML = firstFiveTags
+              .map((tag) => `<a href=/?tags=${tag} class="tag">${tag}</a>`)
+              .join(" "); // Generate HTML for the first five tags
+
+            var remainingTagsHTML = ""; // Initialize HTML for remaining tags
+            if (remainingTagsCount > 0) {
+              remainingTagsHTML = `<span class="remaining-tags hidden">${remainingTags.join(
+                ", "
+              )}</span>`; // Generate HTML for remaining tags if they exist
+            }
+
+            var blogCard = `
+            <div class="col-md-4 mb-4" onclick="window.location.href='http://localhost:8000/readpost/${
+              post.eid
+            }';" style="cursor: pointer;">
+                <div class="card blog-card" data-toggle="modal" data-target="#blogDetailsModal" >
+                    <div class="ribbon-container">
+                        <img src="${imagePath}" class="card-img-top" alt="Blog Image">
+                        <div class="ribbon">${post.category.name}</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text author-name"><i class="fas fa-user icon"></i> ${
+                          post.user.name
+                        }</p> <!-- Display author's name -->
+                        <h5 class="card-title blog-title">${post.title}</h5>
+                        <p class="card-text blog-text">${post.summary}</p>
+                        <div class="tags">
+                        <div class="first-five-tags">${tagsHTML}</div>
+                           ${
+                             remainingTagsCount > 0
+                               ? `<div class="remaining-tags-circle tag">+${remainingTagsCount}</div>`
+                               : ""
+                           }
+                        </div>
+                        </div>
+                    </div>
+            </div>
+        `;
+
+            blogPostsContainer.innerHTML += blogCard;
+          });
+        };
+
+        const renderPagination = () => {
+          const currentPageSpan = document.getElementById("currentPage");
+          currentPageSpan.textContent = `Page ${currentPage}`;
+          const prevPageBtn = document.getElementById("prevPageBtn");
+          const nextPageBtn = document.getElementById("nextPageBtn");
+          prevPageBtn.disabled = currentPage === 1;
+          nextPageBtn.disabled = !nextPage;
+        };
+
+        const prevPageBtn = document.getElementById("prevPageBtn");
+        prevPageBtn.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            fetchBlogPosts();
+          }
+        });
+
+        const nextPageBtn = document.getElementById("nextPageBtn");
+        nextPageBtn.addEventListener("click", () => {
+          if (nextPage) {
+            currentPage++;
+            fetchBlogPosts();
+          }
+        });
+
+        fetchCategories();
+        fetchBlogPosts();
+      });
+    </script>
+  </body>
+</html>
